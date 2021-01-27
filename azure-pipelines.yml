@@ -66,7 +66,7 @@ stages:
               cd ..
             displayName: "Build QPDF"
           - bash: |
-              sudo apt-get install -y pypy3 libxml2-dev libxslt-dev libpython3-dev
+              sudo apt-get install -y pypy3 pypy3-dev libxml2-dev libxslt-dev
               pypy3 -m pip install --upgrade pip
               pypy3 setup.py sdist
               pypy3 -m pip install dist/*.tar.gz
