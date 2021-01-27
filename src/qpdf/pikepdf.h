@@ -170,7 +170,7 @@ void init_annotation(py::module_ &m);
 void init_page(py::module_ &m);
 size_t page_index(QPDF& owner, QPDFObjectHandle page);
 
-char *fix_pypy36_const_char(const char *s)
+inline char *fix_pypy36_const_char(const char *s)
 {
     // PyPy 7.3.1 (=Python 3.6) has a few functions incorrectly defined as requiring
     // char* where CPython specifies const char*. PyPy corrected this in newer versions.
