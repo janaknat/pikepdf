@@ -170,15 +170,20 @@ void init_annotation(py::module_ &m);
 void init_page(py::module_ &m);
 size_t page_index(QPDF& owner, QPDFObjectHandle page);
 
+char *fix_pypy36_const_char(const char *s)
+{
+    // PyPy 7.3.1 (=Python 3.6) has a few functions incorrectly defined as requiring
+    // char* where CPython specifies const char*. PyPy corrected this in newer versions.
+    // So this harmless shim is needed to support some older PyPy's.
+    return const_cast<char *>(s);
+}
+
 // Support for recursion checks
 class StackGuard
 {
 public:
     StackGuard(const char *where) {
-        // PyPy 7.3.1 (=Python 3.6) has Py_EnterRecursiveCall incorrectly defined
-        // as Py_EnterRecursiveCall(char *) when it should be const char *.
-        // Throw away the const, because this works for all implementations/compilers.
-        Py_EnterRecursiveCall(const_cast<char *>(where));
+        Py_EnterRecursiveCall(fix_pypy36_const_char(where));
     }
     StackGuard(const StackGuard&) = delete;
     StackGuard& operator= (const StackGuard&) = delete;
