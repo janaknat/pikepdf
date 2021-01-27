@@ -175,7 +175,10 @@ class StackGuard
 {
 public:
     StackGuard(const char *where) {
-        Py_EnterRecursiveCall(where);
+        // PyPy 7.3.1 (=Python 3.6) has Py_EnterRecursiveCall incorrectly defined
+        // as Py_EnterRecursiveCall(char *) when it should be const char *.
+        // Throw away the const, because this works for all implementations/compilers.
+        Py_EnterRecursiveCall(const_cast<char *>(where));
     }
     StackGuard(const StackGuard&) = delete;
     StackGuard& operator= (const StackGuard&) = delete;
